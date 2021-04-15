@@ -1,6 +1,7 @@
 // TODO : - add mouse wheel to change selector
 // - Cell class
 // - draw only if one of the 4 command selector is pressed
+// - Change the grid setup 
 
 let w = 700;
 let h = 700;
@@ -36,9 +37,9 @@ function setup() {
     cnv = createCanvas(w, h);
     cnv.mouseMoved(cellBrush);
 
-    for (x = 0; x < w / cellSize; x += 1) {
+    for (y = 0; y < h / cellSize; y += 1) {
         ln = []
-        for (y = 0; y < h / cellSize; y += 1) {
+        for (x = 0; x < w / cellSize; x += 1) {
             // cell = new Cell().... class
             let cell = {
                 type: 1
@@ -107,8 +108,12 @@ function cellBrush() {
     }
 
     // TODO : add constrain
-    let x = floor(map(m.x, 0, w, 0, grid[0].length));
-    let y = floor(map(m.y, 0, h, 0, grid.length));
+    let x = floor(map(m.x, 0, w - cellSize, 0, grid[0].length - 1, true));
+    let y = floor(map(m.y, 0, h - cellSize, 0, grid.length - 1, true));
+
+    // console.log(`x : ${x} y : ${y}`);
+    // console.log(`cell type : ${grid[x][y].type}`);
+
 
     redraw()
     push()
@@ -118,7 +123,7 @@ function cellBrush() {
     fill(whichColor(selector.value))
 
     cnv.mouseClicked(() => {
-        grid[x][y].type = selector.value;
+        grid[y][x].type = selector.value;
     })
 
     rect(x * cellSize, y * cellSize, cellSize, cellSize)
@@ -152,31 +157,35 @@ function keyPressed() {
 }
 
 function canvasPosToGrid(x, y) {
-    let xCnv = floor(map(m.x, 0, w, 0, grid[0].length));
-    let yCnv = floor(map(m.y, 0, h, 0, grid.length));
+    let xCnv = floor(map(x, 0, w, 0, grid[0].length));
+    let yCnv = floor(map(y, 0, h, 0, grid.length));
     return xCnv, yCnv
 }
 
-function keyTyped(){
-    if(key === " "){
+function keyTyped() {
+    if (key === " ") {
         resetGrid();
     }
 }
 
-function resetGrid(){
-    for (x = 0; x < grid[0].length; x += 1) {
-        for (y = 0; y < grid.length; y += 1) {
-            grid[x][y].type = 1;
+function resetGrid() {
+    for (y = 0; y < grid[0].length; y += 1) {
+        for (x = 0; x < grid.length; x += 1) {
+            grid[y][x].type = 1;
         }
     }
     redraw()
+    push()
+    textSize(w / 10)
+    text("GRID RESET", w / 2 - w / 4, h / 2)
+    pop()
 }
 
 
 function draw() {
-    for (x = 0; x < grid[0].length; x += 1) {
-        for (y = 0; y < grid.length; y += 1) {
-            let cell = grid[x][y];
+    for (y = 0; y < grid.length; y += 1) {
+        for (x = 0; x < grid[0].length; x += 1) {
+            let cell = grid[y][x];
             push();
             fill(whichColor(cell.type));
             rect(x * cellSize, y * cellSize, cellSize, cellSize);
@@ -185,3 +194,15 @@ function draw() {
     }
 }
 
+
+function process(){
+
+}
+
+class Cell{
+    constructor(){
+        this.f = 0;
+        this.g = 0;
+        this.h = 0;
+    }
+}
