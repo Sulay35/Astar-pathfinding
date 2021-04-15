@@ -1,12 +1,17 @@
 // TODO : - add mouse wheel to change selector
-// - Cell class
-// - draw only if one of the 4 command selector is pressed
-// - Change the grid setup 
+// - draw the gizmo only when the mouse is over 
 
-let w = 700;
-let h = 700;
-let grid = []
-let cellSize = 35;
+
+let cols = 30;
+let rows = 30;
+let cellSize = 20;
+let w = rows * cellSize;
+let h = cols * cellSize;
+
+let grid = new Array(cols);
+
+let openSet = [];
+let closedSet = []; 
 
 // Selector states :
 // 1 = white 
@@ -16,6 +21,16 @@ let cellSize = 35;
 let selector = {
     value: 1
 }
+
+class Cell {
+    constructor() {
+        this.f = 0;
+        this.g = 0;
+        this.h = 0;
+        this.type = 1;
+    }
+}
+
 // Return the color of the selector
 function whichColor(s) {
     switch (s) {
@@ -37,17 +52,16 @@ function setup() {
     cnv = createCanvas(w, h);
     cnv.mouseMoved(cellBrush);
 
-    for (y = 0; y < h / cellSize; y += 1) {
-        ln = []
-        for (x = 0; x < w / cellSize; x += 1) {
-            // cell = new Cell().... class
-            let cell = {
-                type: 1
-            }
-            ln.push(cell)
-            rect(x * cellSize, y * cellSize, cellSize, cellSize);
+    // Creating the grid :
+    for (y = 0; y < cols; y++) {
+        grid[y] = new Array(rows);
+    }
+
+    // Filling the grid 
+    for (x = 0; x < rows; x++) {
+        for (y = 0; y < cols; y++) {
+            grid[y][x] = new Cell();
         }
-        grid.push(ln)
     }
 
     background(80);
@@ -64,8 +78,11 @@ function drawSelectorState(type, c) {
     }
 
     push()
-    if (m.x >= w / 2) {
+    if (m.x >= 4*w / 5) {
         translate(-75, 0)
+    }
+    if(m.y <= 4*h/5){
+        translate(0,25)
     }
     // lil square
     stroke(2);
@@ -100,6 +117,9 @@ function gizmoSelector(s) {
     }
 }
 
+let pointA = new Cell();
+let pointB = new Cell();
+
 function cellBrush() {
     // gizmos :
     let m = {
@@ -107,28 +127,36 @@ function cellBrush() {
         y: mouseY
     }
 
-    // TODO : add constrain
-    let x = floor(map(m.x, 0, w - cellSize, 0, grid[0].length - 1, true));
-    let y = floor(map(m.y, 0, h - cellSize, 0, grid.length - 1, true));
+    let x = floor(map(m.x, 0, (rows-1)*cellSize, 0, rows - 1, true));
+    let y = floor(map(m.y, 0, (cols-1)*cellSize, 0, grid.length - 1, true));
 
     // console.log(`x : ${x} y : ${y}`);
     // console.log(`cell type : ${grid[x][y].type}`);
 
+    redraw();
+    push();
 
-    redraw()
-    push()
-
-    strokeWeight(4)
-    stroke(0, 200, 140)
-    fill(whichColor(selector.value))
+    strokeWeight(4);
+    stroke(0, 200, 140);
+    fill(whichColor(selector.value));
 
     cnv.mouseClicked(() => {
-        grid[y][x].type = selector.value;
+        if(selector.value == 3){
+            pointA.type = 1
+            pointA = grid[y][x]
+            pointA.type = 3;
+        }
+        else if(selector.value == 4){
+            pointB.type = 1
+            pointB = grid[y][x]
+            pointB.type = 4
+        }
+        else{
+            grid[y][x].type = selector.value;
+        }
     })
 
     rect(x * cellSize, y * cellSize, cellSize, cellSize)
-
-    //rect(m.x, m.y, cellSize, cellSize)
     pop()
 
     gizmoSelector(selector);
@@ -157,20 +185,20 @@ function keyPressed() {
 }
 
 function canvasPosToGrid(x, y) {
-    let xCnv = floor(map(x, 0, w, 0, grid[0].length));
-    let yCnv = floor(map(y, 0, h, 0, grid.length));
+    let xCnv = floor(map(x, 0, w, 0, rows));
+    let yCnv = floor(map(y, 0, h, 0, cols));
     return xCnv, yCnv
 }
 
 function keyTyped() {
-    if (key === " ") {
+    if (key === "r" || key == "R") {
         resetGrid();
     }
 }
 
 function resetGrid() {
-    for (y = 0; y < grid[0].length; y += 1) {
-        for (x = 0; x < grid.length; x += 1) {
+    for (y = 0; y < cols; y++) {
+        for (x = 0; x < rows; x++) {
             grid[y][x].type = 1;
         }
     }
@@ -183,8 +211,8 @@ function resetGrid() {
 
 
 function draw() {
-    for (y = 0; y < grid.length; y += 1) {
-        for (x = 0; x < grid[0].length; x += 1) {
+    for (y = 0; y < cols; y += 1) {
+        for (x = 0; x < rows; x += 1) {
             let cell = grid[y][x];
             push();
             fill(whichColor(cell.type));
@@ -195,14 +223,7 @@ function draw() {
 }
 
 
-function process(){
 
+function initialize() {
 }
 
-class Cell{
-    constructor(){
-        this.f = 0;
-        this.g = 0;
-        this.h = 0;
-    }
-}
