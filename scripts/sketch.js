@@ -198,6 +198,12 @@ function cellBrush() {
                     pointB.type = 4
                 }
                 else {
+                    if (grid[y][x] == pointA) { // If drawing on point A
+                        pointA = new Cell()
+                    }
+                    if (grid[y][x] == pointB) { // If drawing on point A
+                        pointB = new Cell()
+                    }
                     grid[y][x].type = selector;
                 }
             }
@@ -240,17 +246,19 @@ function keyPressed() {
 }
 
 function wheelSelector(e) {
-    updatePreview();
-    console.log(e.deltaY)
-    if (e.deltaY < 0) { // scrolling up
-        if (selector < 4) selector++;
-        else selector = 1
+    if (settingUp) {
+        updatePreview();
+        console.log(e.deltaY)
+        if (e.deltaY < 0) { // scrolling up
+            if (selector < 4) selector++;
+            else selector = 1
 
-    } else { // Scrolling down
-        if (selector > 1) selector--;
-        else selector = 4;
+        } else { // Scrolling down
+            if (selector > 1) selector--;
+            else selector = 4;
+        }
+        gizmoSelector(selector);
     }
-    gizmoSelector(selector);
 }
 
 let paused = false;
@@ -271,7 +279,23 @@ function keyTyped() {
 
     }
     // STARTING THE ALGO
-    if (key === " ") initialize();
+    if (key === " ") {
+        if (!pointA.x || !pointA.y) { // A was not set up
+            push()
+            textSize(w / 25)
+            text("NO POINT A FOUND", w / 2 - w / 4, h / 2)
+            pop()
+        }
+        else if (!pointB.x || !pointB.y) { // B was not set up
+            push()
+            textSize(w / 25)
+            text("NO POINT B FOUND", w / 2 - w / 4, h / 2)
+            pop()
+        }
+        else if ((pointA.x && pointA.y) && (pointB.x && pointB.y)) {
+            initialize();
+        }
+    }
 }
 
 function resetGrid() {
@@ -334,6 +358,7 @@ function initialize() {
 
     loop()
 }
+let pathFound = false;
 
 function draw() {
     if (!settingUp) {
@@ -350,6 +375,7 @@ function draw() {
 
             if (current == pointB) {
                 // We made it to the goal
+                pathFound = true;
                 console.log("DONE!");
                 noLoop();
             }
@@ -385,6 +411,7 @@ function draw() {
             }
 
         } else {
+            pathFound = false;
             console.log("NO PATH FOUND!")
             noLoop();
         }
@@ -403,6 +430,16 @@ function draw() {
         }
         for (i = 0; i < path.length; i++) {
             path[i].show(color(0, 255, 255));
+        }
+
+        pointA.show(whichColor(pointA.type));
+        pointB.show(whichColor(pointB.type));
+
+        if (!pathFound && openSet.length == 0) {
+            push()
+            textSize(w / 20)
+            text("NO PATH FOUND", w / 2 - w / 4, h / 2)
+            pop()
         }
     }
 }
