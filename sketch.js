@@ -1,11 +1,16 @@
 // TODO : - add mouse wheel to change selector
 // - draw the gizmo only when the mouse is over 
-// - Add click and slide brush
+// - Add a restart algo function
+// - Add a random and maze generate button 
+// - Add the wheel selector control
+// BUGS FIX : 
+// - fix the point A and B over obstacle bug
+// - fix the spacebar bug
 
-
-let cols = 25;
-let rows = 25;
+let cols = 10;
+let rows = 10;
 let cellSize = 25;
+
 let w = rows * cellSize;
 let h = cols * cellSize;
 
@@ -84,22 +89,28 @@ function canvasPosToGrid(x, y) {
 }
 
 function setup() {
+    w = rows * cellSize;
+    h = cols * cellSize;
+
     cnv = createCanvas(w, h);
+
     cnv.mouseMoved(cellBrush);
+    cnv.mouseWheel(wheelSelector);
 
     // Creating the grid :
     for (y = 0; y < cols; y++) {
         grid[y] = new Array(rows);
     }
 
-    // Filling the grid 
+    // Filling & showing the grid 
+    background(255);
     for (x = 0; x < rows; x++) {
         for (y = 0; y < cols; y++) {
             grid[y][x] = new Cell(x, y);
+            grid[y][x].show(255);
         }
     }
 
-    background(255);
     noLoop();
 }
 
@@ -107,8 +118,6 @@ function setup() {
 // Draw the selector state 
 function drawSelectorState(type, c) {
     if (settingUp) {
-
-        // Top 
         let m = {
             x: mouseX,
             y: mouseY
@@ -151,6 +160,7 @@ function gizmoSelector(s) {
             drawSelectorState("Point B", "orange")
             break;
     }
+
 }
 
 let pointA = new Cell();
@@ -158,24 +168,20 @@ let pointB = new Cell();
 
 function cellBrush() {
     if (settingUp) {
-
-        // gizmos :
         let m = {
             x: mouseX,
             y: mouseY
         }
-
+        // Mapping the mouse position to the grid coordinates
         let x = floor(map(m.x, 0, (rows - 1) * cellSize, 0, rows - 1, true));
         let y = floor(map(m.y, 0, (cols - 1) * cellSize, 0, grid.length - 1, true));
 
-        // console.log(`x : ${x} y : ${y}`);
-        // console.log(`cell type : ${grid[x][y].type}`);
-
         updatePreview();
-        push();
 
+        push();
         strokeWeight(4);
         stroke(0, 200, 140, 80);
+
         let col = whichColor(selector);
         col.setAlpha(120);
         fill(col);
@@ -198,10 +204,17 @@ function cellBrush() {
             }
         })
 
+        // Click and drag brush drawing :
+        if (mouseIsPressed && (selector == 1 || selector == 2)) {
+            if (grid[y][x].type != selector) {
+                grid[y][x].type = selector;
+            }
+        }
+
         rect(x * cellSize, y * cellSize, cellSize, cellSize)
         pop()
-
         gizmoSelector(selector);
+
     }
 }
 
@@ -227,9 +240,36 @@ function keyPressed() {
     }
 }
 
+function wheelSelector(e) {
+    updatePreview();
+    console.log(e.deltaY)
+    if (e.deltaY < 0) { // scrolling up
+        if (selector < 4) selector++;
+        else selector = 1
+
+    } else { // Scrolling down
+        if (selector > 1) selector--;
+        else selector = 4;
+    }
+    gizmoSelector(selector);
+}
+
+let paused = false;
 function keyTyped() {
+    // RESET
     if ((key === "r" || key == "R") && settingUp) {
         resetGrid();
+    }
+    // PAUSE
+    if ((key == "p" || key == "¨P") && !settingUp) {
+        if(!paused){
+            noLoop()
+            paused = true;
+        }else{
+            loop();
+            paused = false;
+        }
+
     }
     // STARTING THE ALGO
     if (key === " ") initialize();
@@ -335,19 +375,17 @@ function draw() {
                     neigh.f = neigh.g + neigh.h; // updating the f cost
                     neigh.cameFrom = current;
                 }
-
-
             }
 
             path = [pointA];
             let t = current;
             path.push(t);
-            while(t.cameFrom){
+            while (t.cameFrom) {
                 path.push(t),
-                t = t.cameFrom;
+                    t = t.cameFrom;
             }
 
-        }else{
+        } else {
             console.log("NO PATH FOUND!")
             noLoop();
         }
