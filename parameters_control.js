@@ -58,17 +58,17 @@ function restart() {
     setup();
 }
 
-const infobox = document.getElementById("infobox");
+const controlPanel = document.getElementById("controlpanel");
 let infoHidden = false
 document.addEventListener('keypress', (e) => {
     // Display the menu :
     if (e.key == "M" || e.key == "m") {
         if (!infoHidden) {
             infoHidden = true;
-            infobox.style.display = "none";
+            controlPanel.style.display = "none";
         } else {
             infoHidden = false;
-            infobox.style.display = "";
+            controlPanel.style.display = "";
         }
     }
 })
