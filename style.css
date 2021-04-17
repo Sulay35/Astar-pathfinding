@@ -1,0 +1,77 @@
+body {
+    margin: 5px;
+    background-color: #f7f7e8;
+    user-select: none;
+}
+
+#controlpanel, #show_panel {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+
+    padding: 5px;
+    margin: 5px;
+
+    opacity: 0.8;
+    background-color: #c7cfb7;
+    border-width: 2px;
+    border: 5px #9dad7f solid;
+
+}
+#controlpanel:hover, #show_panel:hover{
+    opacity: 1;
+}
+
+#show_panel{
+    pointer-events:none;
+    opacity: 0.5;
+}
+
+
+footer{
+    position: absolute;
+    bottom: 5px;  
+    font-family: 'Raleway', sans-serif;
+}
+
+.default_text{
+    font-family: 'Raleway', sans-serif;
+    color: #03506f;
+}
+
+h1,h3{
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    color: #0a043c;
+}
+.button_container{
+    margin: auto;
+    width: 60%;
+}
+
+button{
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    background-color: #9dad7f;
+    color: #03506f;
+    border: none;
+    padding: 5px 40px;
+    text-align: center;   
+}
+
+button:hover{
+    background-color: #a2b977;
+    cursor: pointer;
+
+}
+
+a{
+    color: #a2b977;
+}
+a:hover{
+    color: #a2b977;
+}
+
+a:visited{
+    color: #728b44;
+}

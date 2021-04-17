@@ -1,14 +1,10 @@
-// TODO : - add mouse wheel to change selector
-// - draw the gizmo only when the mouse is over 
-// - Add a restart algo function
-// - Add a random and maze generate button 
-// - Add the wheel selector control
+// TODO :
+// - Add a maze generate button 
 // BUGS FIX : 
 // - fix the point A and B over obstacle bug
-// - fix the spacebar bug
 
-let cols = 10;
-let rows = 10;
+let cols = 25;
+let rows = 50;
 let cellSize = 25;
 
 let w = rows * cellSize;
@@ -96,6 +92,9 @@ function setup() {
 
     cnv.mouseMoved(cellBrush);
     cnv.mouseWheel(wheelSelector);
+    cnv.mouseOut(() => {
+        if (settingUp) updatePreview();
+    })
 
     // Creating the grid :
     for (y = 0; y < cols; y++) {
@@ -174,7 +173,7 @@ function cellBrush() {
         }
         // Mapping the mouse position to the grid coordinates
         let x = floor(map(m.x, 0, (rows - 1) * cellSize, 0, rows - 1, true));
-        let y = floor(map(m.y, 0, (cols - 1) * cellSize, 0, grid.length - 1, true));
+        let y = floor(map(m.y, 0, (cols - 1) * cellSize, 0, cols - 1, true));
 
         updatePreview();
 
@@ -262,10 +261,10 @@ function keyTyped() {
     }
     // PAUSE
     if ((key == "p" || key == "¨P") && !settingUp) {
-        if(!paused){
+        if (!paused) {
             noLoop()
             paused = true;
-        }else{
+        } else {
             loop();
             paused = false;
         }
@@ -405,5 +404,28 @@ function draw() {
         for (i = 0; i < path.length; i++) {
             path[i].show(color(0, 255, 255));
         }
+    }
+}
+
+// Generate a random grid with obstacles
+function generateRandom() {
+    if (settingUp) {
+        // Resetting the grid :
+        for (y = 0; y < cols; y++) {
+            for (x = 0; x < rows; x++) {
+                if (grid[y][x].type != 3 && grid[y][x].type != 4) {
+                    grid[y][x].type = 1
+                }
+            }
+        }
+
+        for (y = 0; y < cols; y++) {
+            for (x = 0; x < rows; x++) {
+                if (random() < 0.2 && grid[y][x].type != 3 && grid[y][x].type != 4) {
+                    grid[y][x].type = 2
+                }
+            }
+        }
+        updatePreview();
     }
 }

@@ -11,64 +11,57 @@
       margin: 0;
     }
   </style>
-  <script src="libraries/p5.js"></script>
-  <script src="libraries/p5.sound.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.js"></script>
   <script src="sketch.js"></script>
-  <style>
-    body {
-      margin: 5px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    #controlpanel {
-      position: absolute;
-      
-      padding: 5px;
-      margin: 5px;
-
-      opacity: 0.8;
-      background-color: cadetblue;
-      border-width: 2px;
-      border: 5px darkblue solid;
-
-    }
-    #controlpanel:hover{
-      opacity: 1;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Raleway&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <h1>A* Pathfinding</h1>
   <div id="controlpanel">
     <h3>Parameters : </h3>
-    <p>
-      <label>rows :</label>
+    <p class="default_text">
+      <label>Rows :</label> <br>
       <input type="range" id="rows_range" onchange="setRows()" min="1" max="100">
       <label id="txt_rows_range"></label><br>
-      
-      <label>cols :</label>
-      <input type="range" id="cols_range" onchange="setCols()" min="1" max="100"><br>
+
+      <label>Columns :</label><br>
+      <input type="range" id="cols_range" onchange="setCols()" min="1" max="100">
       <label id="txt_cols_range"></label><br>
-      
-      <label>cellSize :</label>
+
+      <label>Cell Size :</label><br>
       <input type="range" id="cellSize_range" onchange="setCellSize()" min="5" max="75" step="5">
       <label id="txt_cellSize_range"></label><br>
-      
 
-
-      <button onclick="restart()">RESTART</button>
+      <div class="button_container">
+        <button if="random_btn" onclick="generateRandom()">Generate Random</button>
+      </div>
+      <div class="button_container">
+        <button if="restart_btn" onclick="restart()">RESTART</button>
+      </div>
 
     </p>
     <h3>Instructions : </h3>
-    <p>
-      <b>1,2,3,4</b> : change the brush <br>
-      <b>R</b> : reset the grid <br>
-      <b>SPACEBAR</b> : start the algrithm <br>
-      <b>P</b> : pause the algorithm <br>
+    <p class="default_text">
+      <b>1,2,3,4</b> or <b>mouse wheel</b> : <br> Change the brush <br>
+      <b>R</b> : Reset the grid <br>
+      <b>SPACEBAR</b> : Start the algorithm <br>
+      <b>P</b> : Pause the algorithm <br>
+      <b>M</b> : Hide this panel <br>
     </p>
 
   </div>
+
+  <div id="show_panel">
+    SHOW CONTROL : M
+  </div>
+
+  <footer>Credits : <a href="https://github.com/Sulay35">@Sulaymane Dagnet</a> Email : <a
+      href="sulaymane.dagnet@laposte.net">email me</a></footer>
+
   <script src="parameters_control.js"></script>
 </body>
+
 </html>
