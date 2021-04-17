@@ -1,5 +1,7 @@
 # A* pathfinding algorithm 
 
+![A* pathfinding algorithm found a path !](https://raw.githubusercontent.com/Sulay35/Astar-pathfinding/main/illustration.PNG)
+
 **[try it live](https://editor.p5js.org/Sulay35/sketches/CqtwiLZcw)**
 
 ### Grid drawing system: 
