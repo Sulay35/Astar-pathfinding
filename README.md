@@ -2,7 +2,7 @@
 
 ![A* pathfinding algorithm found a path !](https://raw.githubusercontent.com/Sulay35/Astar-pathfinding/main/images/illustration.PNG)
 
-**[try it live](https://editor.p5js.org/Sulay35/sketches/CqtwiLZcw)**
+**[try it live](https://sulay35.github.io/Astar-pathfinding/)**
 
 ### Program:
 This website works with the library [p5.js](https://p5js.org), it allows you to create a grid with a given number of rows and columns and size of each cell 
