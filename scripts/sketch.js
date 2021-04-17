@@ -292,7 +292,7 @@ function keyTyped() {
             text("NO POINT B FOUND", w / 2 - w / 4, h / 2)
             pop()
         }
-        else if ((pointA.x && pointA.y) && (pointB.x && pointB.y)) {
+        else if ((pointA.x != undefined && pointA.y != undefined) && (pointB.x != undefined && pointB.y != undefined)) {
             initialize();
         }
     }
