@@ -280,13 +280,13 @@ function keyTyped() {
     }
     // STARTING THE ALGO
     if (key === " ") {
-        if (pointA.x != undefined || pointA.y != undefined) { // A was not set up
+        if (pointA.x == undefined || pointA.y == undefined) { // A was not set up
             push()
             textSize(w / 25)
             text("NO POINT A FOUND", w / 2 - w / 4, h / 2)
             pop()
         }
-        else if (pointB.x != undefined || pointB.y != undefined) { // B was not set up
+        else if (pointB.x == undefined || pointB.y == undefined) { // B was not set up
             push()
             textSize(w / 25)
             text("NO POINT B FOUND", w / 2 - w / 4, h / 2)
